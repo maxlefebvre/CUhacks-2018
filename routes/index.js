@@ -1,7 +1,8 @@
 var express = require('express');
+var http = require('http');
 var router = express.Router();
 
-const API_KEY = ''
+const API_KEY = 'GPmFgGW4Z6GuhtHtkUuF5F'
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -11,20 +12,27 @@ router.get('/', function(req, res, next) {
 router.get('/search', function(req, res, next) {
   console.log('Query string GET ' + req.query.title);
   if(req.query.title) {
-      getRecipes(req.query.title, res);
+    searchSets(req.query.title, res);
   } else {
       sendResponse(null, res);
   }
 })
 
+// Handle search
+router.post('/', function (req, res) {
+  console.log('Finding ' + req.body.title)
+  // Clean up input by getting rid of spaces
+  title = req.body.title.replace(/\s/g, '');
+  searchSets(title, res);
+})
 
 function sendResponse(responseData, res) {
   responseDataObj = JSON.parse(responseData)
-  //  if (responseDataObj) {
-  //   res.render('results', { title: });
-  // } else {
-  //     res.render('index');
-  // }
+   if (responseDataObj) {
+    res.render('results', {});
+  } else {
+      res.render('index');
+  }
 }
 
 function parseData(serchResponse, res) {
@@ -41,10 +49,7 @@ function parseData(serchResponse, res) {
 }
 
 function searchSets(title, res) {
-
-  //You need to provide an appid with your request.
-  //Many API services now require that clients register for an app id.
-
+  console.log('Searching..')
   const options = {
       host: 'api.quizlet.com',
       path: `/2.0/search/sets?q=${title}&access_token=${API_KEY}`
