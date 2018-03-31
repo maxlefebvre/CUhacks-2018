@@ -18,7 +18,7 @@ const request = require('request');
 
 //Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
 //Make sure to enclose your value in quotes, like this: const APP_ID = 'amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1';
-const APP_ID ="amzn1.ask.skill.fdfe99dd-017f-4aee-a287-22f7e731895a";
+const APP_ID = "amzn1.ask.skill.fdfe99dd-017f-4aee-a287-22f7e731895a";
 
 
 const GET_QUIZ = "Here's your fact quiz question: ";
@@ -32,7 +32,7 @@ const STOP_MESSAGE = 'Goodbye!';
 //Editing anything below this line might break your skill.
 //=========================================================================================================================================
 
-exports.handler = function(event, context, callback) {
+exports.handler = function (event, context, callback) {
     var alexa = Alexa.handler(event, context);
     alexa.appId = APP_ID;
     alexa.registerHandlers(handlers);
@@ -45,14 +45,14 @@ const handlers = {
     },
     'TellQuizIntent': function () {
         var scope = this;
-        request('https://www.reddit.com/r/dadjokes/top.json?limit=1', function(err, response, body){
-        var resp = JSON.parse(body);
-        var quizTitle = resp.data.children[0].data.title;
-        var quizText = resp.data.children[0].data.selftext;
+        request('https://www.reddit.com/r/dadjokes/top.json?limit=1', function (err, response, body) {
+            var resp = JSON.parse(body);
+            var quizTitle = resp.data.children[0].data.title;
+            var quizText = resp.data.children[0].data.selftext;
 
-        var speechOutput = GET_QUIZ + " <break time='1s'/> " + quizTitle + quizText;
-        scope.emit(':tell', speechOutput);
-      })
+            var speechOutput = GET_QUIZ + " <break time='1s'/> " + quizTitle + quizText;
+            scope.emit(':tell', speechOutput);
+        })
     },
     'AMAZON.HelpIntent': function () {
         var speechOutput = HELP_MESSAGE;
