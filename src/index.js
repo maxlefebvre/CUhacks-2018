@@ -100,7 +100,7 @@ function getStopSummary(stopid, callback) {
 }
 
 function getRouteInfo(stopid, busid, callback) {
-  oc.getRouteInformation(3000, 44, function (error, data) {
+  oc.getRouteInformation(stopid, busid, function (error, data) {
     console.log('Get route info');
     if (error) {
       console.error(error);
