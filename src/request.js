@@ -2,92 +2,78 @@ const oc = require('oc-transpo');
 
 
 
-var googleMapsClient = require('@google/maps').createClient({
-    key: 'AIzaSyDl2U0aoM2R2k_qxtb-GNWPYoaUeD3JGBw'
-  });
+// var googleMapsClient = require('@google/maps').createClient({
+//     key: 'AIzaSyDl2U0aoM2R2k_qxtb-GNWPYoaUeD3JGBw'
+//   });
 
-let location = '';
-// Geocode an address.
-googleMapsClient.geocode({
-    address: '1400 Kilborn Avenue, Ottawa, Ontario, CA'
-  }, function(err, response) {
-    if (!err) {
-      //console.log(response.json.results);
-      location = response.json.results[0].geometry.location;
-      console.log(location);
-      let request = {
-        location: location,
-        radius: 200,
-        type: 'bus_station',
-      }
-      googleMapsClient.placesNearby(request, function(err, response) {
-        if(!err) {
-            console.log(response.json.results);
-        } else {
-            console.log('ERROR!')
-        }
-    })
-    } else {
-        console.log('ERROR!')
-    }
-  });
-
-
-//console.log(googleMapsClient.placesNearby.arguments)
-//     if(!err) {
-//         console.log(response);
+// let location = '';
+// // Geocode an address.
+// googleMapsClient.geocode({
+//     address: '1400 Kilborn Avenue, Ottawa, Ontario'
+//   }, function(err, response) {
+//     if (!err) {
+//       //console.log(response.json.results);
+//       location = response.json.results[0].geometry.location;
+//       console.log(location);
+//       let request = {
+//         location: location,
+//         radius: 200,
+//         type: 'bus_station',
+//       }
+//       googleMapsClient.placesNearby(request, function(err, response) {
+//         if(!err) {
+//             console.log(response.json.results);
+//         } else {
+//             console.log('ERROR!')
+//         }
+//     })
 //     } else {
 //         console.log('ERROR!')
 //     }
-// })
-  // Get bus stops nearby
-//   service = googleMapsClient.places.nearbySearch(location, function(err, response) {
-//       if (!err) {
-//           console.log(response)
-//       } else {
-//           console.log('ERROR!')
-//       }
 //   });
 
-// oc.setup({
-//     key: "36422cd052fedbe8266b888b26365a19",
-//     appID: "560500cd"
-// });
 
 
+oc.setup({
+    key: "36422cd052fedbe8266b888b26365a19",
+    appID: "560500cd"
+});
+setTimeout(doStuff, 1000)
 
-// oc.getRouteDirectionIdentifiers(7188, 48, function(error, data) {
-//     console.log('Get route direction');
-//     if(error) {
-//         return console.error(error);
-//     }
- 
-//     return console.log(data);
-// });
+function doStuff(){
 
-// oc.getStopSummary(7188, function(error, data) {
-//     console.log('Get stop summary');
-//     if(error) {
-//         return console.error(error);
-//     }
+    // oc.getRouteDirectionIdentifiers(3000, 44, function (error, data) {
+    //     console.log('Get route direction');
+    //     if (error) {
+    //         return console.error(error);
+    //     }
 
-//     return console.log(data);
-// });
+    //     return console.log(data);
+    // });
+    oc.getStopSummary(3060, function (error, data) {
+        console.log('Get stop summary');
+        if (error) {
+            return console.error(error);
+        }
 
-// oc.getRouteInformation(7188, 48, function(error, data) {
-//     console.log('Get route info');
-//     if(error) {
-//         return console.error(error);
-//     }
- 
-//     return console.log(data);
-// });
+        return console.log(data);
+    });
 
-// oc.getStopInformation(3000, function(error, data) {
-//     console.log('Get stop info');
-//     if(error) {
-//         return console.error(error);
-//     }
- 
-//     return console.log(data);
-// });
+    // oc.getRouteInformation(3000, 44, function (error, data) {
+    //     console.log('Get route info');
+    //     if (error) {
+    //         return console.error(error);
+    //     }
+    //     console.log('Next bus is in: ' + data.routes[0].trips[0].arrivalTime + ' mins');
+    //     return console.log(data);
+    // });
+
+    // oc.getStopInformation(3000, function (error, data) {
+    //     console.log('Get stop info');
+    //     if (error) {
+    //         return console.error(error);
+    //     }
+
+    //     return console.log(data);
+    // });
+}
