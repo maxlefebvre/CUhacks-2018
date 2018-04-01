@@ -14,7 +14,8 @@
   "author": "Amazon.com",
   "license": "Apache-2.0",
   "dependencies": {
+    "@google/maps": "^0.4.5",
     "alexa-sdk": "^1.0.12",
-    "request": "^2.85.0"
+    "oc-transpo": "^1.0.9"
   }
 }
