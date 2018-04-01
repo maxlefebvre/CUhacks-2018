@@ -4,21 +4,23 @@ import urllib
 # Route numbers
 soup = BS(urllib.request.urlopen("http://www.octranspo.com/routes").read())
 contents = [int(x['value']) for x in soup.find(id="selectRoute").find_all('option')]
-print(contents)
+#print(contents)
 
 file = open("bus_numbers.txt","w")
 for x in contents: 
     file.write(str(x)+',\n')
 file.close() 
 
-# Station numbers
-soup = BS(urllib.request.urlopen("http://www.octranspo.com/go_mobile/transitway_station_numbers").read())
-table = soup.find("table", {"class","alternating sortable"})
+# Get station numbers
+with open('stops_input.txt') as temp_file:
+  stops = [line.rstrip('\n').split(',')[1] for line in temp_file]
 
-file = open("stop_numbers.txt", "w")
-second = False
-for item in table.findAll('td'):
-    if second:
-        file.write(item.string.strip()+',\n')
-    second = not second
-file.close()
+# Clean up list, get rid of empty strings and the table header
+stops = list(filter(None, stops))
+stops = stops[1:]
+file = open("stop_numbers.txt","w")
+for x in stops: 
+    file.write(str(x)+',\n')
+file.close() 
+#stops = filter(bool, stops)
+#print(stops)
