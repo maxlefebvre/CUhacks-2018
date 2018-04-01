@@ -23,10 +23,13 @@ with open('stops_input.txt') as temp_file:
 stops = list(filter(None, stops))
 stops = stops[1:]
 file = open("stop_numbers.txt","w")
+seen = []
 for x in stops: 
-    file.write('{\n'
-                '   "name": {\n'
-                '       "value": "'+ str(x) +'"\n'
-                '    }\n'
-                '},\n')
+    if x not in seen:
+        seen.append(x)
+        file.write('{\n'
+                    '   "name": {\n'
+                    '       "value": "'+ str(x) +'"\n'
+                    '    }\n'
+                    '},\n')
 file.close()
