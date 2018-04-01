@@ -9,5 +9,5 @@ print(contents)
 
 file = open("bus_numbers.txt","w")
 for x in contents: 
-    file.write(str(x)+'\n')
+    file.write(str(x)+',\n')
 file.close() 
