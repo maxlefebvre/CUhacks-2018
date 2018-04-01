@@ -1,10 +1,17 @@
 const oc = require('oc-transpo');
 
-oc.setup({
-    key: "36422cd052fedbe8266b888b26365a19",
-    appID: "560500cd"
-});
-setTimeout(doStuff, 4000)
+var setupPromise = new Promise(function(resolve, reject) {
+    oc.setup({
+        key: "36422cd052fedbe8266b888b26365a19",
+        appID: "560500cd"
+    });
+    if (resolve) {
+        doStuff();
+    } else {
+        console.log('Erorr!');
+    }
+})
+//setTimeout(doStuff, 4000)
 
 
 function getStopSummary(stopid) {
@@ -18,7 +25,7 @@ function getStopSummary(stopid) {
         return console.log(data);
     });
 }
-
+x
 function getRouteInfo(stopid, busid) {
     oc.getRouteInformation(3000, 44, function (error, data) {
         console.log('Get route info');
