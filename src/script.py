@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup as BS
 import urllib
+import json
 
 # Route numbers
 soup = BS(urllib.request.urlopen("http://www.octranspo.com/routes").read())
@@ -8,7 +9,11 @@ contents = [int(x['value']) for x in soup.find(id="selectRoute").find_all('optio
 
 file = open("bus_numbers.txt","w")
 for x in contents: 
-    file.write(str(x)+',\n')
+    file.write('{\n'
+                '   "name": {\n'
+                '       "value": "'+ str(x) +'"\n'
+                '    }\n'
+                '},\n')
 file.close() 
 
 # Get station numbers
@@ -20,7 +25,12 @@ stops = list(filter(None, stops))
 stops = stops[1:]
 file = open("stop_numbers.txt","w")
 for x in stops: 
-    file.write(str(x)+',\n')
-file.close() 
+    file.write('{\n'
+                '   "name": {\n'
+                '       "value": "'+ str(x) +'"\n'
+                '    }\n'
+                '},\n')
+file.close()
 #stops = filter(bool, stops)
+
 #print(stops)
