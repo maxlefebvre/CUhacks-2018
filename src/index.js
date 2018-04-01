@@ -9,8 +9,9 @@
  **/
 
 'use strict';
-const Alexa = require('alexa-sdk');
+const Alexa   = require('alexa-sdk');
 const request = require('request');
+const oc      = require('oc-transpo');
 
 //=========================================================================================================================================
 //TODO: The items below this comment need your attention.
@@ -26,6 +27,10 @@ const HELP_MESSAGE = 'You can say tell me a space fact, or, you can say exit... 
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Goodbye!';
 
+oc.setup({
+  key: "36422cd052fedbe8266b888b26365a19",
+  appID: "560500cd"
+});
 
 
 //=========================================================================================================================================
@@ -51,9 +56,17 @@ const handlers = {
   'BusScheduleIntent': function(){
     var busID = this.event.request.intent.slots.busID.value;
     var stopID = this.event.request.intent.slots.stopID.value;
-    
-    this.emit(':tell', "Your bus number is "+ busID +" and your stop number is "+ stopID);
-    
+    var arrivalTime = -1;
+    // Get time until next bus
+    getRouteInfo(stopID, busID, function(data){
+      if(data && data.routes[0] && data.routes[0].trips) {
+        // Get top result's trips
+        let nextTrip = data.routes[0].trips[0];
+        arrivalTime = nextTrip.arrivalTime;
+      }
+    });
+    if (arrivalTime != -1) this.emit(':tell', "Bus number "+ busID +" will arrive in  "+ arrivalTime);
+    else this.emit(':tell', 'There are no trips available.')
   },
   //bus number is "+ busID +" and your 
   'AMAZON.HelpIntent': function() {
@@ -72,3 +85,37 @@ const handlers = {
     this.emit(':responseReady');
   },
 };
+
+// OC transpo helper functions
+function getStopSummary(stopid, callback) {
+  oc.getStopSummary(stopid, function (error, data) {
+      console.log('Get stop summary');
+      if (error) {
+          console.error(error);
+          return null;
+      }
+      return callback(data);
+  });
+}
+
+function getRouteInfo(stopid, busid, callback) {
+  oc.getRouteInformation(3000, 44, function (error, data) {
+      console.log('Get route info');
+      if (error) {
+          console.error(error);
+          return null;
+      }
+      console.log('Next bus is in: ' + data.routes[0].trips[0].arrivalTime + ' mins');
+      return callback(data);
+  });
+}
+function getStopInfo(stopid, callback) {
+  oc.getStopInformation(stopid, function (error, data) {
+      console.log('Get stop info');
+      if (error) {
+          console.error(error);
+          return null;
+      }
+      return callback(data);
+  });
+}

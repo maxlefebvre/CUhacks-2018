@@ -14,27 +14,36 @@ var setupPromise = new Promise(function(resolve, reject) {
 //setTimeout(doStuff, 4000)
 
 
-function getStopSummary(stopid) {
+function getStopSummary(stopid, callback) {
     oc.getStopSummary(stopid, function (error, data) {
         console.log('Get stop summary');
         if (error) {
             console.error(error);
             return null;
         }
-
-        return console.log(data);
+        return callback(data);
     });
 }
 
-function getRouteInfo(stopid, busid) {
+function getRouteInfo(stopid, busid, callback) {
     oc.getRouteInformation(3000, 44, function (error, data) {
         console.log('Get route info');
         if (error) {
             console.error(error);
             return null;
         }
-        //console.log('Next bus is in: ' + data.routes[0].trips[0].arrivalTime + ' mins');
-        return console.log(data);
+        console.log('Next bus is in: ' + data.routes[0].trips[0].arrivalTime + ' mins');
+        return callback(data);
+    });
+}
+function getStopInfo(stopid, callback) {
+    oc.getStopInformation(stopid, function (error, data) {
+        console.log('Get stop info');
+        if (error) {
+            console.error(error);
+            return null;
+        }
+        return callback(data);
     });
 }
 
@@ -51,20 +60,11 @@ function getRouteInfo(stopid, busid) {
 //     }
 // }
 
-function getStopInfo(stopid) {
-    oc.getStopInformation(stopid, function (error, data) {
-        console.log('Get stop info');
-        if (error) {
-            console.error(error);
-            return null;
-        }
-
-        return console.log(data);
-    });
-}
 
 function doStuff() {
     // getStopSummary(3000);
-    console.log(getRouteInfo(3000, 44))
+    getRouteInfo(3000, 44, function(data) {
+        console.log(data.routes[0].trips[0].arrivalTime)
+    })
     // getStopInfo(3000);
 }

@@ -5,7 +5,6 @@ import json
 # Route numbers
 soup = BS(urllib.request.urlopen("http://www.octranspo.com/routes").read())
 contents = [int(x['value']) for x in soup.find(id="selectRoute").find_all('option')]
-#print(contents)
 
 file = open("bus_numbers.txt","w")
 for x in contents: 
@@ -31,6 +30,3 @@ for x in stops:
                 '    }\n'
                 '},\n')
 file.close()
-#stops = filter(bool, stops)
-
-#print(stops)
