@@ -6,19 +6,49 @@ var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyDl2U0aoM2R2k_qxtb-GNWPYoaUeD3JGBw'
   });
 
-
+let location = '';
 // Geocode an address.
 googleMapsClient.geocode({
     address: '1400 Kilborn Avenue, Ottawa, Ontario, CA'
   }, function(err, response) {
     if (!err) {
       //console.log(response.json.results);
-      let location = response.json.results[0].geometry.location;
+      location = response.json.results[0].geometry.location;
       console.log(location);
+      let request = {
+        location: location,
+        radius: 200,
+        type: 'bus_station',
+      }
+      googleMapsClient.placesNearby(request, function(err, response) {
+        if(!err) {
+            console.log(response.json.results);
+        } else {
+            console.log('ERROR!')
+        }
+    })
     } else {
         console.log('ERROR!')
     }
   });
+
+
+//console.log(googleMapsClient.placesNearby.arguments)
+//     if(!err) {
+//         console.log(response);
+//     } else {
+//         console.log('ERROR!')
+//     }
+// })
+  // Get bus stops nearby
+//   service = googleMapsClient.places.nearbySearch(location, function(err, response) {
+//       if (!err) {
+//           console.log(response)
+//       } else {
+//           console.log('ERROR!')
+//       }
+//   });
+
 // oc.setup({
 //     key: "36422cd052fedbe8266b888b26365a19",
 //     appID: "560500cd"
