@@ -25,7 +25,7 @@ function getStopSummary(stopid) {
         return console.log(data);
     });
 }
-x
+
 function getRouteInfo(stopid, busid) {
     oc.getRouteInformation(3000, 44, function (error, data) {
         console.log('Get route info');
@@ -64,7 +64,7 @@ function getStopInfo(stopid) {
 }
 
 function doStuff() {
-    getStopSummary(3000);
-    getRouteInfo(3000, 44);
-    getStopInfo(3000);
+    // getStopSummary(3000);
+    console.log(getRouteInfo(3000, 44))
+    // getStopInfo(3000);
 }

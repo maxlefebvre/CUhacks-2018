@@ -18,10 +18,10 @@ const request = require('request');
 
 //Replace with your app ID (OPTIONAL).  You can find this value at the top of your skill's page on http://developer.amazon.com.
 //Make sure to enclose your value in quotes, like this: const APP_ID = 'amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1';
-const APP_ID = "amzn1.ask.skill.fdfe99dd-017f-4aee-a287-22f7e731895a";
+const APP_ID = "amzn1.ask.skill.14e8ce28-74ca-4d85-b50b-8f7ba073164d";
 
 
-const GET_QUIZ = "Here's your fact quiz question: ";
+const GET_ADDRESS = "Here's your address: ";
 const HELP_MESSAGE = 'You can say tell me a space fact, or, you can say exit... What can I help you with?';
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Goodbye!';
@@ -32,41 +32,43 @@ const STOP_MESSAGE = 'Goodbye!';
 //Editing anything below this line might break your skill.
 //=========================================================================================================================================
 
-exports.handler = function (event, context, callback) {
-    var alexa = Alexa.handler(event, context);
-    alexa.appId = APP_ID;
-    alexa.registerHandlers(handlers);
-    alexa.execute();
+exports.handler = function(event, context, callback) {
+  var alexa = Alexa.handler(event, context);
+  alexa.appId = APP_ID;
+  alexa.registerHandlers(handlers);
+  alexa.execute();
 };
 
 const handlers = {
-    'LaunchRequest': function () {
-        this.emit('TellQuizIntent');
-    },
-    'TellQuizIntent': function () {
-        var scope = this;
-        request('https://www.reddit.com/r/dadjokes/top.json?limit=1', function (err, response, body) {
-            var resp = JSON.parse(body);
-            var quizTitle = resp.data.children[0].data.title;
-            var quizText = resp.data.children[0].data.selftext;
+  'LaunchRequest': function() {
+    //this.emit('TellQuizIntent');
+    this.emit('LaunchIntent');
+  },
+  'LaunchIntent': function() {
+    this.emit(':ask', "Welcome to the OC Transpo Bus Schedules, what is your bus and stop number?");
+  },
+  
+  'BusScheduleIntent': function(){
+    var busID = this.event.request.intent.slots.busID.value;
+    var stopID = this.event.request.intent.slots.stopID.value;
+    
+    this.emit(':tell', "Your bus number is "+ busID +" and your stop number is "+ stopID);
+    
+  },
+  //bus number is "+ busID +" and your 
+  'AMAZON.HelpIntent': function() {
+    var speechOutput = HELP_MESSAGE;
+    var reprompt = HELP_REPROMPT;
 
-            var speechOutput = GET_QUIZ + " <break time='1s'/> " + quizTitle + quizText;
-            scope.emit(':tell', speechOutput);
-        })
-    },
-    'AMAZON.HelpIntent': function () {
-        var speechOutput = HELP_MESSAGE;
-        var reprompt = HELP_REPROMPT;
-
-        this.response.speak(speechOutput).listen(reprompt);
-        this.emit(':responseReady');
-    },
-    'AMAZON.CancelIntent': function () {
-        this.response.speak(STOP_MESSAGE);
-        this.emit(':responseReady');
-    },
-    'AMAZON.StopIntent': function () {
-        this.response.speak(STOP_MESSAGE);
-        this.emit(':responseReady');
-    },
+    this.response.speak(speechOutput).listen(reprompt);
+    this.emit(':responseReady');
+  },
+  'AMAZON.CancelIntent': function() {
+    this.response.speak(STOP_MESSAGE);
+    this.emit(':responseReady');
+  },
+  'AMAZON.StopIntent': function() {
+    this.response.speak(STOP_MESSAGE);
+    this.emit(':responseReady');
+  },
 };
