@@ -9,9 +9,9 @@
  **/
 
 'use strict';
-const Alexa   = require('alexa-sdk');
+const Alexa = require('alexa-sdk');
 const request = require('request');
-const oc      = require('oc-transpo');
+const oc = require('oc-transpo');
 
 //=========================================================================================================================================
 //TODO: The items below this comment need your attention.
@@ -37,7 +37,7 @@ oc.setup({
 //Editing anything below this line might break your skill.
 //=========================================================================================================================================
 
-exports.handler = function(event, context, callback) {
+exports.handler = function (event, context, callback) {
   var alexa = Alexa.handler(event, context);
   alexa.appId = APP_ID;
   alexa.registerHandlers(handlers);
@@ -45,42 +45,43 @@ exports.handler = function(event, context, callback) {
 };
 
 const handlers = {
-  'LaunchRequest': function() {
+  'LaunchRequest': function () {
     //this.emit('TellQuizIntent');
     this.emit('LaunchIntent');
   },
-  'LaunchIntent': function() {
+  'LaunchIntent': function () {
     this.emit(':ask', "Welcome to the OC Transpo Bus Schedules, what is your bus and stop number?");
   },
-  
-  'BusScheduleIntent': function(){
+
+  'BusScheduleIntent': function () {
     var busID = this.event.request.intent.slots.busID.value;
     var stopID = this.event.request.intent.slots.stopID.value;
     var arrivalTime = -1;
     // Get time until next bus
-    getRouteInfo(stopID, busID, function(data){
-      if(data && data.routes[0] && data.routes[0].trips) {
+    getRouteInfo(stopID, busID, (data) => {
+      if (data && data.routes[0] && data.routes[0].trips) {
         // Get top result's trips
         let nextTrip = data.routes[0].trips[0];
         arrivalTime = nextTrip.arrivalTime;
+        setTimeout(() => this.emit(':tell', 'Bus number ' + busID + ' will arrive in  '+ arrivalTime + ' minutes'), 1000);
+      } else {
+        setTimeout(() => this.emit(':tell', 'There are no trips available.', 1000))
       }
     });
-    if (arrivalTime != -1) this.emit(':tell', "Bus number "+ busID +" will arrive in  "+ arrivalTime);
-    else this.emit(':tell', 'There are no trips available.')
   },
   //bus number is "+ busID +" and your 
-  'AMAZON.HelpIntent': function() {
+  'AMAZON.HelpIntent': function () {
     var speechOutput = HELP_MESSAGE;
     var reprompt = HELP_REPROMPT;
 
     this.response.speak(speechOutput).listen(reprompt);
     this.emit(':responseReady');
   },
-  'AMAZON.CancelIntent': function() {
+  'AMAZON.CancelIntent': function () {
     this.response.speak(STOP_MESSAGE);
     this.emit(':responseReady');
   },
-  'AMAZON.StopIntent': function() {
+  'AMAZON.StopIntent': function () {
     this.response.speak(STOP_MESSAGE);
     this.emit(':responseReady');
   },
@@ -89,33 +90,34 @@ const handlers = {
 // OC transpo helper functions
 function getStopSummary(stopid, callback) {
   oc.getStopSummary(stopid, function (error, data) {
-      console.log('Get stop summary');
-      if (error) {
-          console.error(error);
-          return null;
-      }
-      return callback(data);
+    console.log('Get stop summary');
+    if (error) {
+      console.error(error);
+      return null;
+    }
+    return callback(data);
   });
 }
 
 function getRouteInfo(stopid, busid, callback) {
   oc.getRouteInformation(3000, 44, function (error, data) {
-      console.log('Get route info');
-      if (error) {
-          console.error(error);
-          return null;
-      }
-      console.log('Next bus is in: ' + data.routes[0].trips[0].arrivalTime + ' mins');
-      return callback(data);
+    console.log('Get route info');
+    if (error) {
+      console.error(error);
+      return null;
+    }
+    console.log('Next bus is in: ' + data.routes[0].trips[0].arrivalTime + ' mins');
+    return callback(data);
   });
 }
+
 function getStopInfo(stopid, callback) {
   oc.getStopInformation(stopid, function (error, data) {
-      console.log('Get stop info');
-      if (error) {
-          console.error(error);
-          return null;
-      }
-      return callback(data);
+    console.log('Get stop info');
+    if (error) {
+      console.error(error);
+      return null;
+    }
+    return callback(data);
   });
 }

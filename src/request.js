@@ -64,7 +64,7 @@ function getStopInfo(stopid, callback) {
 function doStuff() {
     // getStopSummary(3000);
     getRouteInfo(3000, 44, function(data) {
-        console.log(data.routes[0].trips[0].arrivalTime)
+        console.log(data.routes[0].trips[0])
     })
     // getStopInfo(3000);
 }
